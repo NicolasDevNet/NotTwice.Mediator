@@ -23,6 +23,20 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build -c Release --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
+    - name: Pack nugets
+      run: dotnet pack -c Release --no-build --output
+    - name: Publish
+      run: dotnet publish NotTwice.CA.Mediator/NotTwice.CA.Mediator.csproj -c Release -o release — nologo
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: Application_Artifact
+        path: /home/runner/work/NotTwice.CA.Mediator/NotTwice.CA.Mediator/release/
+    - name: Upload Nuget Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: Application_Artifact
+        path: "*.nupkg"
